@@ -310,6 +310,38 @@ footer{background:var(--stone);border-top:1px solid var(--border);padding:28px 7
 .modal-success p{font-size:13px;color:#6B6560;margin-bottom:18px;line-height:1.6;}
 .modal-success a{display:inline-block;background:#C9A84C;color:#0B1E3D;padding:11px 24px;border-radius:9px;font-weight:700;font-size:14px;text-decoration:none;font-family:'Sora',sans-serif;}
 .modal-err{font-size:12px;color:#B91C1C;margin-top:-6px;margin-bottom:8px;display:none;}
+.restart-gate{margin-top:16px;position:relative;z-index:1;}
+.rgate-inner{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:22px 20px;max-width:400px;margin:0 auto;text-align:left;}
+.rgate-title{font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:6px;}
+.rgate-desc{font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:14px;line-height:1.6;}
+.rg-field{width:100%;border:1.5px solid rgba(255,255,255,0.15);border-radius:9px;padding:10px 13px;font-size:13px;font-family:'Inter',sans-serif;color:#fff;background:rgba(255,255,255,0.07);margin-bottom:10px;outline:none;transition:border-color .2s;}
+.rg-field:focus{border-color:#C9A84C;}
+.rg-field::placeholder{color:rgba(255,255,255,0.35);}
+.rgate-consent{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.6;background:rgba(255,255,255,0.04);border-radius:8px;padding:9px 12px;margin-bottom:12px;}
+.rgate-err{font-size:12px;color:#ff8080;margin-bottom:8px;display:none;}
+.rgate-btns{display:flex;gap:10px;align-items:center;}
+.rgate-submit{background:linear-gradient(135deg,#C9A84C,#E8C060);color:#0B1E3D;border:none;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;transition:all .2s;}
+.rgate-submit:hover{transform:translateY(-1px);}
+.rgate-cancel{background:none;border:none;font-size:13px;color:rgba(255,255,255,0.35);cursor:pointer;text-decoration:underline;}
+.rgate-cancel:hover{color:rgba(255,255,255,0.6);}
+
+.rematch-row{margin-top:18px;padding-top:16px;border-top:1px solid rgba(26,26,26,0.08);}
+.rematch-btn{background:transparent;border:1.5px solid rgba(11,30,61,0.2);color:#0B1E3D;padding:10px 18px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:7px;}
+.rematch-btn:hover{background:#0B1E3D;color:#fff;border-color:#0B1E3D;}
+.gate-wrap{padding:4px 0;}
+.gate-icon{font-size:2rem;margin-bottom:10px;}
+.gate-title{font-family:'Sora',sans-serif;font-size:1rem;font-weight:700;color:#0B1E3D;margin-bottom:6px;}
+.gate-desc{font-size:13px;color:#6B6560;margin-bottom:14px;line-height:1.6;}
+.gate-consent{font-size:11px;color:#6B6560;line-height:1.6;background:#EAE6DF;border-radius:8px;padding:9px 12px;margin-bottom:12px;display:flex;gap:7px;align-items:flex-start;}
+.gate-err{font-size:12px;color:#B91C1C;margin-bottom:8px;display:none;}
+.gate-btns{display:flex;gap:10px;align-items:center;}
+.gate-submit{background:#0B1E3D;color:#fff;border:none;padding:10px 20px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;transition:background .2s;}
+.gate-submit:hover{background:#162d56;}
+.gate-cancel{background:none;border:none;font-size:13px;color:#6B6560;cursor:pointer;text-decoration:underline;font-family:'Inter',sans-serif;}
+.gate-cancel:hover{color:#0B1E3D;}
+.rematch-ready{text-align:center;padding:28px 0;}
+.rematch-ready-icon{font-size:2.2rem;margin-bottom:10px;}
+.rematch-ready-txt{font-size:14px;color:#6B6560;line-height:1.6;}
 </style>
 </head>
 <body>
@@ -468,7 +500,21 @@ footer{background:var(--stone);border-top:1px solid var(--border);padding:28px 7
   <p style="font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:6px;">Request Strategic Career Documentation</p>
   <p style="font-size:13px;color:rgba(255,255,255,0.38);margin-bottom:18px;">Enter your email below to receive your complete Blueprint.</p>
   <button class="btn-n" onclick="openModal('blueprint','Download Your Blueprint','Enter your details and we will send you your personalised Blueprint PDF — A-level roadmap, target universities, and spring week guide.')">Access Blueprint PDF &#x2192;</button>
-  <br><button class="sim-restart" onclick="simReset()">Restart Simulator</button>
+  <br><button class="sim-restart" onclick="showRestartGate()">&#x21BA; Restart Simulator</button>
+  <div class="restart-gate" id="restart-gate" style="display:none;">
+   <div class="rgate-inner">
+    <div class="rgate-title">&#x1F511; Start a new session</div>
+    <p class="rgate-desc">Enter your details to restart. You will also receive our weekly finance career tips.</p>
+    <input class="rg-field" id="rg-name" type="text" placeholder="Your first name" autocomplete="given-name">
+    <input class="rg-field" id="rg-email" type="email" placeholder="Your email address" autocomplete="email">
+    <div class="rgate-consent">&#x2139;&#xFE0F; By continuing you agree to receive The Little Banker newsletter. Unsubscribe any time.</div>
+    <div class="rgate-err" id="rgate-err">Please enter a valid name and email.</div>
+    <div class="rgate-btns">
+     <button class="rgate-submit" onclick="submitRestartGate()">Start Again &#x2192;</button>
+     <button class="rgate-cancel" onclick="cancelRestartGate()">Cancel</button>
+    </div>
+   </div>
+  </div>
  </div>
 </div>
 
@@ -800,9 +846,13 @@ function simAnswer(type,btn,reveal){
 function simNext(){
   simStep++;
   if(simStep>=scenarios.length){simShowResult();return;}
-  const card=document.getElementById('sim-card');
-  card.classList.add('slide-out');
-  setTimeout(()=>{card.classList.remove('slide-out');simLoad();},250);
+  const card=document.getElementById('scard');
+  if(card){
+    card.classList.add('slide-out');
+    setTimeout(()=>{card.classList.remove('slide-out');simLoad();},250);
+  } else {
+    simLoad();
+  }
 }
 
 function simShowResult(){
@@ -832,7 +882,40 @@ function simReset(){
   document.getElementById('sresult').style.display='none';
   document.getElementById('sresult').innerHTML='';
   document.getElementById('sim-quiz').style.display='none';
+  const gate=document.getElementById('restart-gate');
+  if(gate) gate.style.display='none';
   document.getElementById('sim-intro').style.display='block';
+}
+
+function showRestartGate(){
+  const gate=document.getElementById('restart-gate');
+  gate.style.display=(gate.style.display==='none'||gate.style.display==='')? 'block':'none';
+  document.getElementById('rg-name').value='';
+  document.getElementById('rg-email').value='';
+  document.getElementById('rgate-err').style.display='none';
+}
+
+function cancelRestartGate(){
+  document.getElementById('restart-gate').style.display='none';
+}
+
+async function submitRestartGate(){
+  const name=document.getElementById('rg-name').value.trim();
+  const email=document.getElementById('rg-email').value.trim();
+  const err=document.getElementById('rgate-err');
+  if(!name||!email||!email.includes('@')){err.style.display='block';return;}
+  err.style.display='none';
+  const btn=document.querySelector('.rgate-submit');
+  btn.textContent='Saving\u2026'; btn.disabled=true;
+  try{
+    await fetch(SUPA_URL+'/rest/v1/quiz_restarts',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},
+      body:JSON.stringify({name,email,source:'quiz-restart'})
+    });
+  }catch(e){console.warn('Supabase:',e);}
+  btn.textContent='Start Again \u2192'; btn.disabled=false;
+  simReset();
 }
 
 const sel=new Set();
@@ -852,6 +935,7 @@ const roleMap=[
   {req:[`maths`,`economics`],           role:`Trader or Markets Analyst`,          desc:`A strong quantitative and economic foundation suits trading desks and markets roles across equities, bonds, and currencies.`,                            have:[`Maths`,`Economics`],            tip:`Add Computing or Statistics to sharpen your edge on quantitative trading strategies.`},
   {req:[`business`,`english`],          role:`Commercial Banker`,                  desc:`Commercial awareness and clear communication are the foundations of relationship banking and coverage roles.`,                                           have:[`Business`,`English`],           tip:`Add Economics to deepen your understanding of the macroeconomic context your clients operate in.`}
 ];
+let matchCount=0;
 function matchS(){
   const panel=document.getElementById('rpanel');
   if(sel.size===0){panel.innerHTML=`<div class="ph">\u2190 Select at least one subject first</div>`;return;}
@@ -860,6 +944,7 @@ function matchS(){
   if(!best)best=roleMap[0];
   const allS=[`maths`,`economics`,`business`,`english`,`computing`,`history`,`psychology`,`science`,`languages`,`art`];
   const miss=allS.filter(s=>!sel.has(s)).slice(0,3).map(s=>s.charAt(0).toUpperCase()+s.slice(1));
+  matchCount++;
   panel.innerHTML=`
     <div class="mr">${best.role}</div>
     <div class="md">${best.desc}</div>
@@ -868,6 +953,73 @@ function matchS(){
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 5px;">Worth developing</div>
     <div class="prow">${miss.map(m=>`<span class="mp m">+ ${m}</span>`).join('')}</div>
     <div class="mtip"><strong>Next step:</strong> ${best.tip}</div>
+    <div class="rematch-row">
+      <button class="rematch-btn" onclick="tryRematch()">&#x1F504; Try again</button>
+    </div>
+  `;
+}
+
+function tryRematch(){
+  const alreadySubscribed=sessionStorage.getItem('tlb_subscribed');
+  if(!alreadySubscribed){ showRematchGate(); } else { doRematch(); }
+}
+
+function showRematchGate(){
+  const panel=document.getElementById('rpanel');
+  panel.innerHTML=`
+    <div class="gate-wrap">
+      <div class="gate-icon">&#x1F511;</div>
+      <h3 class="gate-title">Try again</h3>
+      <p class="gate-desc">Enter your email to explore more career matches. You\u2019ll also receive our weekly finance career tips \u2014 unsubscribe any time.</p>
+      <input class="mfield" id="gate-name" type="text" placeholder="Your first name" autocomplete="given-name">
+      <input class="mfield" id="gate-email" type="email" placeholder="Your email address" autocomplete="email">
+      <div class="gate-consent">
+        <span>&#x2139;&#xFE0F;</span> By continuing you agree to receive The Little Banker newsletter. No spam, unsubscribe any time.
+      </div>
+      <div class="gate-err" id="gate-err">Please enter a valid name and email address.</div>
+      <div class="gate-btns">
+        <button class="gate-submit" onclick="submitGate()">Continue &#x2192;</button>
+        <button class="gate-cancel" onclick="cancelGate()">Cancel</button>
+      </div>
+    </div>
+  `;
+}
+
+async function submitGate(){
+  const name=document.getElementById('gate-name').value.trim();
+  const email=document.getElementById('gate-email').value.trim();
+  const err=document.getElementById('gate-err');
+  if(!name||!email||!email.includes('@')){ err.style.display='block'; return; }
+  err.style.display='none';
+  const btn=document.querySelector('.gate-submit');
+  btn.textContent='Saving\u2026'; btn.disabled=true;
+  try{
+    await fetch(SUPA_URL+'/rest/v1/email_signups',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},
+      body:JSON.stringify({name,email,source:'matcher-rematch'})
+    });
+  }catch(e){console.warn('Supabase error:',e);}
+  sessionStorage.setItem('tlb_subscribed','1');
+  sessionStorage.setItem('tlb_name',name);
+  doRematch();
+}
+
+function cancelGate(){
+  matchS();
+  matchCount--;
+}
+
+function doRematch(){
+  sel.clear();
+  document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('sel'));
+  const name=sessionStorage.getItem('tlb_name')||'';
+  const panel=document.getElementById('rpanel');
+  panel.innerHTML=`
+    <div class="rematch-ready">
+      <div class="rematch-ready-icon">&#x1F3AF;</div>
+      <p class="rematch-ready-txt">${name?`Nice one, ${name}!`:`Nice one!`} Select new subjects and hit match again.</p>
+    </div>
   `;
 }
 </script>
